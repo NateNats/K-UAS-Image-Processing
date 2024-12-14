@@ -1,0 +1,28 @@
+# For image processing and manipulation
+opencv-python
+numpy
+Pillow
+
+# For YOLOv5 (model training and inference)
+torch>=1.7.0
+torchvision>=0.8.1
+ultralytics
+
+# For GUI (if using Tkinter-based GUI)
+tk
+
+# For dataset handling and augmentation
+albumentations
+matplotlib
+
+# For testing and evaluation
+pytest
+pytest-mock
+
+# Optional libraries for advanced image augmentation and feature extraction
+albumentations
+scikit-image
+
+# For machine learning or deep learning (if needed for classification tasks)
+torch
+torchvision
