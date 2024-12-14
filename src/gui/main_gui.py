@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, filedialog
+
+import numpy as np
 from PIL import Image, ImageTk
 from src.preprocessing import preprocessing
 
@@ -69,17 +71,28 @@ class MainGUI:
 
     def process_image(self):
         if self.file_path:
-            print(self.file_path)
+            # resize image
+            img = Image.open(self.file_path)
+            pw = np.array(img)
+            preprocessing.resize_image(pw,"resized.jpg",  300, 300)
 
-            # # Jalankan deteksi dengan YOLOv5
-            # results, preprocessed_image = detect_disease(self.file_path)
-            #
-            # # Gambarkan bounding boxes di gambar
-            # image_with_boxes = draw_boxes(preprocessed_image.copy(), results)
-            #
-            # # Konversi gambar untuk ditampilkan di GUI
-            # image_tk = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(image_with_boxes, cv2.COLOR_BGR2RGB)))
-            # self.image_label.config(image=image_tk)
-            # self.image_label.image = image_tk  # Simpan referensi gambar agar tidak terhapus
-            # print(results.pandas().xyxy[0].to_string())
+            # reduce noise
+            img2 = Image.open("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/resized/resized.jpg")
+            pw2 = np.array(img2)
+            preprocessing.reduce_noise(pw2,"denoised.jpg")
+
+            # adjust brightness contrast
+            img3 = Image.open("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/denoised/denoised.jpg")
+            pw3 = np.array(img3)
+            preprocessing.adjust_brightness_contrast(pw3,"brightness.jpg")
+
+            # segment image
+            img4 = Image.open("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/brightness/brightness.jpg")
+            pw4 = np.array(img4)
+            preprocessing.segment_image(pw4,"segmented.jpg")
+
+            #normalize image
+            img5 = Image.open("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/segment/segmented.jpg")
+            pw5 = np.array(img5)
+            preprocessing.normalize_image(pw5,"normalized.jpg")
 
