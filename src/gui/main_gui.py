@@ -34,17 +34,82 @@ class MainGUI:
         self.image_label.place(relx=0.5, rely=0.5, anchor="center")
 
         self.clear_button = ttk.Button(self.canvas, text="Hapus Gambar", command=self.clear_image)
-        self.clear_button.place(relx=0.25, rely=0.9, anchor="center")
+        self.clear_button.place(relx=0.2, rely=0.9, anchor="center")
         self.clear_button.state(["disabled"])
 
         self.upload_button = ttk.Button(self.canvas, text="Upload Gambar", command=self.upload_image)
-        self.upload_button.place(relx=0.5, rely=0.9, anchor="center")
+        self.upload_button.place(relx=0.4, rely=0.9, anchor="center")
 
         self.process_button = ttk.Button(self.canvas, text="Proses Gambar", command=self.process_image)
-        self.process_button.place(relx=0.75, rely=0.9, anchor="center")
+        self.process_button.place(relx=0.6, rely=0.9, anchor="center")
         self.process_button.state(["disabled"])
 
+        self.result_button = ttk.Button(self.canvas, text="Tampilkan Hasil", command=self.show_result)
+        self.result_button.place(relx=0.8, rely=0.9, anchor="center")
+        self.result_button.state(["disabled"])
+
         self.file_path = None  # Untuk menyimpan path file gambar yang diupload
+
+    def show_result(self):
+        result_window = tk.Toplevel(self.root)
+        result_window.title("Hasil proses")
+        result_window.geometry("1000x800")
+        result_window.configure(bg="#e7f1fd")
+        result_window.resizable(False, False)
+
+        card_frame = ttk.Frame(result_window, padding=10)
+        card_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+        # resize image
+        img_resize = Image.open("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/resized/resized.jpg")
+        img_resize = img_resize.resize((300, 300), Image.Resampling.LANCZOS)
+        self.tk_resize = ImageTk.PhotoImage(img_resize)
+        image_label = ttk.Label(card_frame, image=self.tk_resize)
+        image_label.grid(row=0, column=0, padx=10, pady=10)
+        image_label.bind("<Button-1>", lambda e: self.show_large_image(img_resize, "Resized Image"))
+        resize_label = ttk.Label(card_frame, text=f"Resized Image {img_resize.width}x{img_resize.height}")
+        resize_label.grid(row=1, column=0, padx=10, pady=10)
+
+        # reduce noise
+        img_noise = Image.open("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/denoised/denoised.jpg")
+        img_noise = img_noise.resize((300, 300), Image.Resampling.LANCZOS)
+        self.tk_noise = ImageTk.PhotoImage(img_noise)
+        noise_label = ttk.Label(card_frame, image=self.tk_noise)
+        noise_label.grid(row=0, column=1, padx=10, pady=10)
+        noise_label.bind("<Button-1>", lambda e: self.show_large_image(img_noise, "Denoised Image"))
+        noise_label = ttk.Label(card_frame, text="Denoised Image")
+        noise_label.grid(row=1, column=1, padx=10, pady=10)
+
+        # adjust brightness contrast
+        img_brightness = Image.open("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/brightness/brightness.jpg")
+        img_brightness = img_brightness.resize((300, 300), Image.Resampling.LANCZOS)
+        self.tk_brightness = ImageTk.PhotoImage(img_brightness)
+        brightness_label = ttk.Label(card_frame, image=self.tk_brightness)
+        brightness_label.grid(row=0, column=2, padx=10, pady=10)
+        brightness_label.bind("<Button-1>", lambda e: self.show_large_image(img_brightness, "Brightness Image"))
+        brightness_label = ttk.Label(card_frame, text="Brightness Image")
+        brightness_label.grid(row=1, column=2, padx=10, pady=10)
+
+        # segment image
+        img_segment = Image.open("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/segment/segmented.jpg")
+        img_segment = img_segment.resize((300, 300), Image.Resampling.LANCZOS)
+        self.tk_segment = ImageTk.PhotoImage(img_segment)
+        segment_label = ttk.Label(card_frame, image=self.tk_segment)
+        segment_label.grid(row=2, column=0, padx=10, pady=10)
+        segment_label.bind("<Button-1>", lambda e: self.show_large_image(img_segment, "Segmented Image"))
+        segment_label = ttk.Label(card_frame, text="Segmented Image")
+        segment_label.grid(row=3, column=0, padx=10, pady=10)
+
+        # normalize image
+        img_normalize = Image.open("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/normalize/normalized.jpg")
+        img_normalize = img_normalize.resize((300, 300), Image.Resampling.LANCZOS)
+        self.tk_normalize = ImageTk.PhotoImage(img_normalize)
+        normalize_label = ttk.Label(card_frame, image=self.tk_normalize)
+        normalize_label.grid(row=2, column=1, padx=10, pady=10)
+        normalize_label.bind("<Button-1>", lambda e: self.show_large_image(img_normalize, "Normalized Image"))
+        normalize_label = ttk.Label(card_frame, text="Normalized Image")
+        normalize_label.grid(row=3, column=1, padx=10, pady=10)
+
 
     def upload_image(self):
         """Fungsi untuk upload gambar."""
@@ -58,7 +123,7 @@ class MainGUI:
             image = Image.open(file_path)
             image.thumbnail((600, 400))
             self.displayed_image = ImageTk.PhotoImage(image)
-            self.image_label.config(image=self.displayed_image, text="")
+            self.image_label.config(image=self.displayed_image, text=f"size: {image.width}x{image.height}")
             self.clear_button.state(["!disabled"])
             self.process_button.state(["!disabled"])
 
@@ -67,6 +132,7 @@ class MainGUI:
         self.image_label.config(image="", text="Masukan gambar disini...")
         self.clear_button.state(["disabled"])
         self.process_button.state(["disabled"])
+        self.result_button.state(["disabled"])
         self.file_path = None
 
     def process_image(self):
@@ -96,3 +162,20 @@ class MainGUI:
             pw5 = np.array(img5)
             preprocessing.normalize_image(pw5,"normalized.jpg")
 
+            self.result_button.state(["!disabled"])
+
+    def show_large_image(self, image, title):
+        large_img_window = tk.Toplevel(self.root)
+        large_img_window.geometry("800x800")
+        large_img_window.title(title)
+        large_img_window.resizable(False, False)
+        large_img_window.configure(bg="#f0f0f0")
+
+        image = image.resize((800, 800), Image.Resampling.LANCZOS)
+        self.tk_large = ImageTk.PhotoImage(image)
+
+        img_label = ttk.Label(large_img_window, image=self.tk_large)
+        img_label.pack(fill="both", expand=True, padx=10, pady=10, anchor="center")
+
+        close_button = ttk.Button(large_img_window, text="Close", command=large_img_window.destroy)
+        close_button.pack(pady=10)
