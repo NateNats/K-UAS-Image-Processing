@@ -2,9 +2,10 @@ from PIL import Image
 import os
 import numpy as np
 import cv2
-# import torch
+import torch
+from ultralytics import YOLO
 
-# yolo_model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
+model = YOLO("./models/yolov8s.pt")
 
 def resize_image(image, image_name, target_width, target_height, result_dir="C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/resized"):
     height, width, _ = image.shape

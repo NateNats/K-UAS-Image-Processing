@@ -15,7 +15,7 @@ class MainGUI:
 
         self.title_frame = tk.Frame(self.root, bg="#d3d3d3", padx=10, pady=10)
         self.title_frame.place(relx=0.5, rely=0.1, anchor="center")
-        self.title = ttk.Label(self.title_frame, text="Deteksi Penyakit Cabai", font=("Arial", 24, "bold"), padding=10)
+        self.title = ttk.Label(self.title_frame, text="Segmentasi Cabai", font=("Arial", 24, "bold"), padding=10)
         self.title.pack()
 
         self.main_frame = ttk.Frame(self.root, padding=10)
