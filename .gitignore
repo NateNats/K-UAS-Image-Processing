@@ -2,3 +2,5 @@ venv/
 .venv/
 src/isCUDAAvailable.py
 result/
+data/
+src/models/

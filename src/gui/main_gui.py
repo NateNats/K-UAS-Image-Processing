@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, filedialog
 
+import cv2
 import numpy as np
 from PIL import Image, ImageTk
 from src.preprocessing import preprocessing
@@ -90,25 +91,35 @@ class MainGUI:
         brightness_label = ttk.Label(card_frame, text="Brightness Image")
         brightness_label.grid(row=1, column=2, padx=10, pady=10)
 
+        # mask image
+        img_mask = Image.open("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/masked/masked.jpg")
+        img_mask = img_mask.resize((300, 300), Image.Resampling.LANCZOS)
+        self.tk_mask = ImageTk.PhotoImage(img_mask)
+        mask_label = ttk.Label(card_frame, image=self.tk_mask)
+        mask_label.grid(row=2, column=0, padx=10, pady=10)
+        mask_label.bind("<Button-1>", lambda e: self.show_large_image(img_mask, "Masked Image"))
+        mask_label = ttk.Label(card_frame, text="Masked Image")
+        mask_label.grid(row=3, column=0, padx=10, pady=10)
+
         # segment image
         img_segment = Image.open("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/segment/segmented.jpg")
         img_segment = img_segment.resize((300, 300), Image.Resampling.LANCZOS)
         self.tk_segment = ImageTk.PhotoImage(img_segment)
         segment_label = ttk.Label(card_frame, image=self.tk_segment)
-        segment_label.grid(row=2, column=0, padx=10, pady=10)
+        segment_label.grid(row=2, column=1, padx=10, pady=10)
         segment_label.bind("<Button-1>", lambda e: self.show_large_image(img_segment, "Segmented Image"))
         segment_label = ttk.Label(card_frame, text="Segmented Image")
-        segment_label.grid(row=3, column=0, padx=10, pady=10)
+        segment_label.grid(row=3, column=1, padx=10, pady=10)
 
         # normalize image
         img_normalize = Image.open("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/normalize/normalized.jpg")
         img_normalize = img_normalize.resize((300, 300), Image.Resampling.LANCZOS)
         self.tk_normalize = ImageTk.PhotoImage(img_normalize)
         normalize_label = ttk.Label(card_frame, image=self.tk_normalize)
-        normalize_label.grid(row=2, column=1, padx=10, pady=10)
+        normalize_label.grid(row=2, column=2, padx=10, pady=10)
         normalize_label.bind("<Button-1>", lambda e: self.show_large_image(img_normalize, "Normalized Image"))
         normalize_label = ttk.Label(card_frame, text="Normalized Image")
-        normalize_label.grid(row=3, column=1, padx=10, pady=10)
+        normalize_label.grid(row=3, column=2, padx=10, pady=10)
 
 
     def upload_image(self):
@@ -153,14 +164,21 @@ class MainGUI:
             preprocessing.adjust_brightness_contrast(pw3,"brightness.jpg")
 
             # segment image
-            img4 = Image.open("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/brightness/brightness.jpg")
-            pw4 = np.array(img4)
-            preprocessing.segment_image(pw4,"segmented.jpg")
+
+            img4 = cv2.imread("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/brightness/brightness.jpg")
+            preprocessing.segment_image(img4,"segmented.jpg")
+
+            # img4 = Image.open("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/brightness/brightness.jpg")
+            # pw4 = np.array(img4)
+            # preprocessing.segment_image(pw4,"segmented.jpg")
 
             #normalize image
             img5 = Image.open("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/segment/segmented.jpg")
             pw5 = np.array(img5)
-            preprocessing.normalize_image(pw5,"normalized.jpg")
+            preprocessing.normalize_image(pw5, "normalized.jpg")
+
+            # img5 = cv2.imread("C:/Kuliah/Semester 5/UAS Pemrosesan Citra/result/segment/segmented.jpg")
+            # preprocessing.normalize_image(img5,"normalized.jpg")
 
             self.result_button.state(["!disabled"])
 
